@@ -9,13 +9,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 using Windows.Data.Json;
 using ReactNative.UIManager;
 using ReactNative.UIManager.Annotations;
 using Windows.Storage;
 using Newtonsoft.Json.Linq;
-using PSPDFKit.Pdf;
 using PSPDFKit.Pdf.Annotation;
 using PSPDFKit.UI;
 using ReactNativePSPDFKit.Events;
@@ -30,6 +29,8 @@ namespace ReactNativePSPDFKit
         private const int COMMAND_SAVE_CURRENT_DOCUMENT = 3;
         private const int COMMAND_GET_ANNOTATIONS = 4;
         private const int COMMAND_ADD_ANNOTATION = 5;
+        private const int COMMAND_GET_TOOLBAR_ITEMS = 6;
+        private const int COMMAND_SET_TOOLBAR_ITEMS = 7;
 
         internal readonly PDFViewPage PdfViewPage = new PDFViewPage();
 
@@ -78,6 +79,12 @@ namespace ReactNativePSPDFKit
             },
             {
                 "addAnnotation", COMMAND_ADD_ANNOTATION
+            },
+            {
+                "getToolbarItems", COMMAND_GET_TOOLBAR_ITEMS
+            },
+            {
+                "setToolbarItems", COMMAND_SET_TOOLBAR_ITEMS
             }
         };
 
@@ -99,6 +106,12 @@ namespace ReactNativePSPDFKit
                     break;
                 case COMMAND_ADD_ANNOTATION:
                     await PdfViewPage.Pdfview.Document.CreateAnnotationAsync(Factory.FromJson(JsonObject.Parse(args[0].ToString())));
+                    break;
+                case COMMAND_GET_TOOLBAR_ITEMS:
+                    PdfViewPage.GetToolbarItems(args[0].Value<int>());
+                    break;
+                case COMMAND_SET_TOOLBAR_ITEMS:
+                    await PdfViewPage.Pdfview.Controller.SetToolbarItemsAsync(PSPDFKit.UI.ToolbarComponents.Factory.FromJsonArray(JsonArray.Parse(args[0].ToString())).ToList());
                     break;
             }
         }
