@@ -63,7 +63,7 @@ namespace ReactNativePSPDFKit
 
                     await LoadFileAsync(file);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     var dialog = new MessageDialog("Unable to open the file specified.");
                     await dialog.ShowAsync();
