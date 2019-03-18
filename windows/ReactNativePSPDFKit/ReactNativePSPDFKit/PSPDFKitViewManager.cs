@@ -93,25 +93,25 @@ namespace ReactNativePSPDFKit
             switch (commandId)
             {
                 case COMMAND_ENTER_ANNOTATION_CREATION_MODE:
-                    await PdfViewPage.Pdfview.Controller.SetInteractionModeAsync(InteractionMode.Note);
+                    await PdfViewPage.SetInteractionMode(args[0].Value<int>(), InteractionMode.Note);
                     break;
                 case COMMAND_EXIT_CURRENTLY_ACTIVE_MODE:
-                    await PdfViewPage.Pdfview.Controller.SetInteractionModeAsync(InteractionMode.None);
+                    await PdfViewPage.SetInteractionMode(args[0].Value<int>(), InteractionMode.None);
                     break;
                 case COMMAND_SAVE_CURRENT_DOCUMENT:
-                    await PdfViewPage.ExportCurrentDocument();
+                    await PdfViewPage.ExportCurrentDocument(args[0].Value<int>());
                     break;
                 case COMMAND_GET_ANNOTATIONS:
                     await PdfViewPage.GetAnnotations(args[0].Value<int>(), args[1].Value<int>());
                     break;
                 case COMMAND_ADD_ANNOTATION:
-                    await PdfViewPage.Pdfview.Document.CreateAnnotationAsync(Factory.FromJson(JsonObject.Parse(args[0].ToString())));
+                    await PdfViewPage.CreateAnnotation(args[0].Value<int>(), args[1].ToString());
                     break;
                 case COMMAND_GET_TOOLBAR_ITEMS:
                     PdfViewPage.GetToolbarItems(args[0].Value<int>());
                     break;
                 case COMMAND_SET_TOOLBAR_ITEMS:
-                    PdfViewPage.SetToolbarItems(args[0].Value<int>(), args[1].ToString());
+                    await PdfViewPage.SetToolbarItems(args[0].Value<int>(), args[1].ToString());
                     break;
             }
         }
@@ -145,6 +145,13 @@ namespace ReactNativePSPDFKit
                     new JObject
                     {
                         {"registrationName", "onDataReturned"},
+                    }
+                },
+                {
+                    PdfViewOperationResult.EVENT_NAME,
+                    new JObject
+                    {
+                        {"registrationName", "onOperationResult"},
                     }
                 }
             };
